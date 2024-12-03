@@ -11,6 +11,10 @@ sudo_users = [123456789, 123456789]
 [[chats]]
 from = "123456789"
 to = "123456789"
+filter = [
+  { regex: ".*test1", media: "none" },
+  { regex: ".*test2", media: [ "audio", "video" ]}
+]
 
 [[chats]]
 from = ["123456789", "123456789"]
@@ -61,8 +65,19 @@ CONFIG_SCHEMA = {
                     },
                     "replace": {
                         "type": "object",
-                        "patternProperties": {
-                            "^[a-zA-Z0-9_]+$": {"type": "string"}
+                        "patternProperties": {"^[a-zA-Z0-9_]+$": {"type": "string"}},
+                    },
+                    "filter": {
+                        "type": ["array", "object"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "regex": {"type": "string"},
+                                "media": {
+                                    "type": ["array", "string"],
+                                    "items": {"type": "string"},
+                                },
+                            },
                         },
                     },
                 },
