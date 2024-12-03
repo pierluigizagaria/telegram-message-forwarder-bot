@@ -26,7 +26,8 @@ def work(_: Client, message: Message):
 
     if chat_filters := chat.get("filter"):
         if not any(
-            (not filter.get("regex") or re.match(filter["regex"], message_content))
+            (not filter.get("regex") or re.match(
+                filter["regex"], message_content))
             and (
                 not filter.get("media")
                 or any(
@@ -57,13 +58,14 @@ def work(_: Client, message: Message):
                     chat, caption=message_content, parse_mode=ParseMode.MARKDOWN
                 )
             elif message.text:
-                app.send_message(chat, message_content, parse_mode=ParseMode.MARKDOWN)
+                app.send_message(chat, message_content,
+                                 parse_mode=ParseMode.MARKDOWN)
             else:
                 message.copy(chat)
     except Exception as e:
         logging.error(
             f"Error while sending message from {
-                      message.chat.id} to {chat}: {e}"
+                message.chat.id} to {chat}: {e}"
         )
 
 
