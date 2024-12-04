@@ -9,7 +9,7 @@ from pyrogram import filters
 from bot import app, monitored_chats, chats_map, sudo_users
 from pyrogram.types import Message
 from pyrogram.enums import ParseMode, MessageMediaType
-from pyrogram import Client
+from pyrogram import Client, idle
 
 logging.info("Bot Started")
 
@@ -96,4 +96,12 @@ def forward(client: Client, message: Message):
         )
 
 
-app.run()
+app.start()
+
+# Tap all chats to populate internal peer ids.
+for dialog in app.get_dialogs():
+    pass
+
+idle()
+
+app.stop()
