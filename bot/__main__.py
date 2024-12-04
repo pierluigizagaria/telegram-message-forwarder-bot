@@ -96,12 +96,13 @@ def forward(client: Client, message: Message):
         )
 
 
-app.start()
+async def run_and_tap_chats():
+    await app.start()
+    if not (await app.get_me()).is_bot:
+        # Tap all chats to populate internal peer ids.
+        async for _ in app.get_dialogs():
+            pass
+    await idle()
+    await app.stop()
 
-# Tap all chats to populate internal peer ids.
-for dialog in app.get_dialogs():
-    pass
-
-idle()
-
-app.stop()
+app.run(run_and_tap_chats())
