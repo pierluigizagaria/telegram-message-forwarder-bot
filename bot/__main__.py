@@ -26,7 +26,7 @@ def work(_: Client, message: Message):
 
     if chat_filters := chat.get("filter"):
         if not any(
-            (not filter.get("regex") or re.match(
+            (not filter.get("regex") or re.search(
                 filter["regex"], message_content))
             and (
                 not filter.get("media")
