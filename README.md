@@ -41,7 +41,8 @@ from = -100123456789        # required
 to = 123456789              # required
 replace = { "old" = "new" } # optional
 filter = {
-  regex = ".*test2",           # text must match ".*test" regex
+  # Use literal strings on regex ('')!
+  regex = '.*test2',           # text must match ".*test" regex.
   media = [ "photo", "video" ] # AND media type must be either "photo" or "video"
 }
 
@@ -55,7 +56,8 @@ filter = [
   },
   # OR
   {
-    regex = ".*test2",  # text that match ".*text" regex
+    # Use literal strings on regex ('')!
+    regex = '.*test2',  # text that match ".*text" regex.
     media = "None"      # AND has no media
   }
 ]
@@ -72,6 +74,7 @@ Note: The chats should be in the format of `int` or `list` of `int`. If you want
 - Supported identifier for a chat should be the chat id.
 - Refer to [MessageMediaType](https://docs.pyrogram.org/api/enums/MessageMediaType) for the allowed media filter.
 - Use `/forward` command to forward older messages. For message older than 2 days you have to login as a user and set the `session_string` variable in pyrogram section. Command usage - `/forward <Chat ID/Username/Message Link> <Limit, No. of Messages to forward> <ID of the last message of from chat to avoid repetition>`
+- Use literal strings ('') regex to prevent character escaping.
 
 ## Deployment
 
