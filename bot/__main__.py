@@ -49,7 +49,7 @@ def work(_: Client, message: Message):
 
     if chat.get("replace"):
         for old, new in chat["replace"].items():
-            message_content = message_content.replace(old, new)
+            message_content = re.sub(old, new, message_content)
 
     try:
         for chat in chat["to"]:
