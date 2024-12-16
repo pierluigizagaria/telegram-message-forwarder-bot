@@ -30,7 +30,7 @@ sudo_users = [123456789, 123456789]                                 # optional
 
 - `from` - Chat id of the chat from which messages will be forwarded. You can get it by sending `/id` command to [Rose](https://t.me/MissRose_bot).
 - `to` - Chat id of the chat to which messages will be forwarded. You can get it by sending `/id` command to [Rose](https://t.me/MissRose_bot).
-- `replace` - (Optional) A dictionary of strings to replace in the message. The key is the string to be replaced and the value is the string to replace with. This is optional.
+- `replace` - (Optional) A dictionary of strings or regexes to replace in the message. The key is the string to be replaced and the value is the string to replace with. Supports regex substitutions too. This is optional.
 - `filter` - (Optional) A single filter or array of filters that are tested in OR condition.
 
 You can add multiple chats by using the following format.
@@ -39,7 +39,9 @@ You can add multiple chats by using the following format.
 [[chats]]
 from = -100123456789        # required
 to = 123456789              # required
-replace = { "old" = "new" } # optional
+replace = { "late" = "early", 'ready,.*' = 'not ready' } # optional
+# It's too late -> It's too early
+# I'm ready, lets'go -> I'm not ready
 filter = {
   # Use literal strings on regex ('')!
   regex = '.*test2',           # text must match ".*test" regex.
@@ -74,7 +76,7 @@ Note: The chats should be in the format of `int` or `list` of `int`. If you want
 - Supported identifier for a chat should be the chat id.
 - Refer to [MessageMediaType](https://docs.pyrogram.org/api/enums/MessageMediaType) for the allowed media filter.
 - Use `/forward` command to forward older messages. For message older than 2 days you have to login as a user and set the `session_string` variable in pyrogram section. Command usage - `/forward <Chat ID/Username/Message Link> <Limit, No. of Messages to forward> <ID of the last message of from chat to avoid repetition>`
-- Use literal strings ('') regex to prevent character escaping.
+- Use literal strings ('') on regex to prevent character escaping.
 
 ## Deployment
 
