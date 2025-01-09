@@ -53,19 +53,22 @@ def work(_: Client, message: Message):
 
     try:
         for chat in chat["to"]:
+            topic_id = int(chat.split("_")[1]) if len(
+                chat.split("_")) > 1 else None
+            chat_id = chat if topic_id is None else chat.split("_")[0]
             if message.caption:
                 message.copy(
-                    chat, caption=message_content, parse_mode=ParseMode.MARKDOWN
+                    chat_id, caption=message_content, reply_to_message_id=topic_id, parse_mode=ParseMode.MARKDOWN
                 )
             elif message.text:
-                app.send_message(chat, message_content,
+                app.send_message(chat_id, message_content, reply_to_message_id=topic_id,
                                  parse_mode=ParseMode.MARKDOWN)
             else:
-                message.copy(chat)
+                message.copy(chat_id, reply_to_message_id=topic_id)
     except Exception as e:
         logging.error(
             f"Error while sending message from {
-                message.chat.id} to {chat}: {e}"
+                message.chat.id} to {chat_id}: {e}"
         )
 
 
