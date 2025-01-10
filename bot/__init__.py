@@ -1,4 +1,5 @@
 import logging
+from pprint import pformat
 import os
 import sys
 from os import environ
@@ -25,7 +26,8 @@ elif os.environ.get("CONFIG"):
     config = toml.loads(environ["CONFIG"])
     logging.info(f"Loaded config from environment variable")
 else:
-    logging.error(f"File config.toml and CONFIG env variable not found. Exiting...")
+    logging.error(
+        f"File config.toml and CONFIG env variable not found. Exiting...")
     sys.exit(1)
 
 
@@ -41,11 +43,11 @@ except ValidationError as error:
 
 logging.info(f"Initalizing bot...")
 
-monitored_chats, chats_map = parse_chats(config["chats"])
+monitored_chats, rules_map = parse_chats(config["chats"])
 sudo_users = config["pyrogram"].get("sudo_users", [])
 
 logging.info(f"Monitored chats: {', '.join(str(x) for x in monitored_chats)}")
-logging.info(f"Chats map: {chats_map}")
+logging.info(f"Rules: {rules_map}")
 
 if config["pyrogram"].get("bot_token"):
     app = Client(
