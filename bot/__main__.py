@@ -43,7 +43,7 @@ def work(_: Client, message: Message):
                 )
                 for filter in chat_filters
             ):
-                return
+                continue
 
         if rule.get("replace"):
             for old, new in rule["replace"].items():
