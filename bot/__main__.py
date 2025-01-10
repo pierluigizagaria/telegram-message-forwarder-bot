@@ -53,8 +53,8 @@ def work(_: Client, message: Message):
 
     try:
         for chat in chat["to"]:
-            topic_id = int(chat.split("_")[1]) if len(
-                chat.split("_")) > 1 else None
+            topic_id = int(str(chat).split("_")[1]) if len(
+                str(chat).split("_")) > 1 else None
             chat_id = chat if topic_id is None else chat.split("_")[0]
             if message.caption:
                 message.copy(
