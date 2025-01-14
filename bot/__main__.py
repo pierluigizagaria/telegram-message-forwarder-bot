@@ -1,3 +1,4 @@
+from functools import reduce
 import logging
 import re
 
@@ -13,19 +14,17 @@ logging.info("Bot Started")
 
 @app.on_message(filters.chat(monitored_chats) & filters.incoming)
 def work(_: Client, message: Message):
-    message_content = (
+    message_text = (
         (message.caption or message.text).markdown
         if (message.caption or message.text)
         else ""
     )
 
     for rule in rules_map.get(message.chat.id):
-        message_copy = message_content
-
         if chat_filters := rule.get("filter"):
             if not any(
                 (not filter.get("regex") or re.search(
-                    filter["regex"], message_content))
+                    filter["regex"], message_text))
                 and (
                     not filter.get("media")
                     or any(
@@ -45,9 +44,8 @@ def work(_: Client, message: Message):
             ):
                 continue
 
-        if rule.get("replace"):
-            for old, new in rule["replace"].items():
-                message_copy = re.sub(old, new, message_content)
+        message_or_caption = message_text if not rule.get("replace") else reduce(
+            lambda text, regex: re.sub(regex[0], regex[1], text), rule["replace"].items(), message_text)
 
         try:
             for chat in rule["to"]:
@@ -56,10 +54,10 @@ def work(_: Client, message: Message):
                 chat_id = chat if topic_id is None else chat.split("_")[0]
                 if message.caption:
                     message.copy(
-                        chat_id, caption=message_copy, reply_to_message_id=topic_id, parse_mode=ParseMode.MARKDOWN
+                        chat_id, caption=message_or_caption, reply_to_message_id=topic_id, parse_mode=ParseMode.MARKDOWN
                     )
                 elif message.text:
-                    app.send_message(chat_id, message_copy, reply_to_message_id=topic_id,
+                    app.send_message(chat_id, message_or_caption, reply_to_message_id=topic_id,
                                      parse_mode=ParseMode.MARKDOWN)
         except Exception as e:
             logging.error(
